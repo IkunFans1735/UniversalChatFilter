@@ -257,6 +257,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     public void doInitTasks() {
         isAuthMeAvailable = Bukkit.getPluginManager().getPlugin("AuthMe") != null;
         isCslAvailable = Bukkit.getPluginManager().getPlugin("CatSeedLogin") != null;
+        WordReplace.clearCache();
         IWordAllow wA = WordAllows.chains(WordAllows.defaults(), new WordAllow(), new ExternalWordAllow());
         AtomicReference<IWordDeny> wD = new AtomicReference<>();
         isInitialized = false;

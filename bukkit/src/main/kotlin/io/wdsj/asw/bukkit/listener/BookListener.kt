@@ -130,7 +130,7 @@ class BookListener : Listener {
                 if (isCancelMode) {
                     event.isCancelled = true
                 } else {
-                    bookMeta.setTitle(processedTitle)
+                    bookMeta.title = processedTitle
                 }
                 shouldSendMessage = true
                 outMessage = originalTitle

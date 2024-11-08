@@ -4,6 +4,7 @@ import com.github.houbb.heaven.util.util.OsUtil;
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords;
 import io.wdsj.asw.bukkit.manage.punish.Punishment;
 import io.wdsj.asw.bukkit.manage.punish.ViolationCounter;
+import io.wdsj.asw.bukkit.method.WordReplace;
 import io.wdsj.asw.bukkit.permission.PermissionsEnum;
 import io.wdsj.asw.bukkit.setting.PluginMessages;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
@@ -57,6 +58,7 @@ public class ConstructCommandExecutor implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("reloadconfig") && (sender.hasPermission(PermissionsEnum.RELOAD.getPermission()) || sender instanceof ConsoleCommandSender)) {
                 settingsManager.reload();
+                WordReplace.clearCache();
                 File msgFile = new File(getInstance().getDataFolder(), "messages_" + settingsManager.getProperty(PluginSettings.PLUGIN_LANGUAGE) +
                         ".yml");
                 if (!msgFile.exists()) {
