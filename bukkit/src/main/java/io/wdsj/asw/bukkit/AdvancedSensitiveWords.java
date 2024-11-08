@@ -135,6 +135,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         permCache = CachingPermTool.enable(this);
         BookCache.initialize();
         LoggingUtils.start();
+        WordReplace.clearCache();
         doInitTasks();
         if (settingsManager.getProperty(PluginSettings.PURGE_LOG_FILE)) purgeLog();
         if (!isEventMode) {
@@ -257,7 +258,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     public void doInitTasks() {
         isAuthMeAvailable = Bukkit.getPluginManager().getPlugin("AuthMe") != null;
         isCslAvailable = Bukkit.getPluginManager().getPlugin("CatSeedLogin") != null;
-        WordReplace.clearCache();
         IWordAllow wA = WordAllows.chains(WordAllows.defaults(), new WordAllow(), new ExternalWordAllow());
         AtomicReference<IWordDeny> wD = new AtomicReference<>();
         isInitialized = false;
@@ -320,6 +320,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
             voiceChatHookService.unregister();
         }
         BookCache.invalidateAll();
+        WordReplace.clearCache();
         ViolationCounter.resetAllViolations();
         SchedulingUtils.cancelTaskSafely(violationResetTask);
         if (permCache != null) permCache.disable();
