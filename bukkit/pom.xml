@@ -291,7 +291,7 @@
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>sensitive-word</artifactId>
-            <version>0.21.0</version>
+            <version>0.22.0</version>
             <scope>compile</scope>
         </dependency>
 
