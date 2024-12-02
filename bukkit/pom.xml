@@ -307,7 +307,7 @@
         <dependency>
             <groupId>dev.ai4j</groupId>
             <artifactId>openai4j</artifactId>
-            <version>0.22.0</version>
+            <version>0.25.0</version>
             <scope>provided</scope>
         </dependency>
 
