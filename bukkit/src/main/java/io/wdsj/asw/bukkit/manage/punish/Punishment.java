@@ -19,10 +19,6 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 
 @SuppressWarnings("deprecation")
 public class Punishment {
-    /**
-     * 对玩家执行配置中定义的惩罚。
-     * @param player 要惩罚的玩家
-     */
     public static void punish(Player player) {
         List<String> punishList = settingsManager.getProperty(PluginSettings.PUNISHMENT);
         if (punishList.isEmpty()) return;
@@ -114,11 +110,6 @@ public class Punishment {
         }
     }
 
-    /**
-     * 使指定半径内的敌对生物对玩家表现出敌对行为。
-     * @param target 目标玩家
-     * @param radius 敌对生物的搜索半径
-     */
     private static void makeHostileTowardsPlayer(Player target, double radius) {
         SchedulingUtils.runSyncAtEntityIfFolia(target, () -> {
             List<Entity> entities = target.getNearbyEntities(radius, radius, radius);
