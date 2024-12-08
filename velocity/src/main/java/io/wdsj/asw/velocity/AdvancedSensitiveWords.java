@@ -56,11 +56,9 @@ public class AdvancedSensitiveWords {
                 logger.info("Checking for update...");
                 if (Updater.isUpdateAvailable()) {
                     if (Updater.isDevChannel()) {
-                        logger.warn("There is a new development version available: " + Updater.getLatestVersion() +
-                                ", you're on: " + Updater.getCurrentVersion());
+                        logger.warn("There is a new development version available: {}, you're on: {}", Updater.getLatestVersion(), Updater.getCurrentVersion());
                     } else {
-                        logger.warn("There is a new version available: " + Updater.getLatestVersion() +
-                                ", you're on: " + Updater.getCurrentVersion());
+                        logger.warn("There is a new version available: {}, you're on: {}", Updater.getLatestVersion(), Updater.getCurrentVersion());
                     }
                 } else {
                     if (!Updater.isErred()) {

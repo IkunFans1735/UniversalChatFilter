@@ -44,10 +44,10 @@ public class PluginMessageForwarder {
                                 out.write(message);
                                 out.writeUTF(serverInfo.getName());
                             } catch (Exception e) {
-                                logger.error("Failed to write notice message: " + e.getMessage());
+                                logger.error("Failed to write notice message: {}", e.getMessage());
                             }
                             server.sendPluginMessage(CHANNEL, out.toByteArray());
-                            logger.debug("Send notice message to " + server.getServerInfo().getName());
+                            logger.debug("Send notice message to {}", server.getServerInfo().getName());
                         }
                     });
                     break;
