@@ -13,16 +13,12 @@ import com.github.houbb.sensitive.word.support.allow.WordAllows;
 import com.github.houbb.sensitive.word.support.deny.WordDenys;
 import com.github.houbb.sensitive.word.support.resultcondition.WordResultConditions;
 import com.github.houbb.sensitive.word.support.tag.WordTags;
-import com.github.retrooper.packetevents.PacketEvents;
 import io.wdsj.asw.bukkit.ai.OllamaProcessor;
 import io.wdsj.asw.bukkit.ai.OpenAIProcessor;
 import io.wdsj.asw.bukkit.command.ConstructCommandExecutor;
 import io.wdsj.asw.bukkit.command.ConstructTabCompleter;
 import io.wdsj.asw.bukkit.core.condition.WordResultConditionNumMatch;
 import io.wdsj.asw.bukkit.integration.placeholder.ASWExpansion;
-import io.wdsj.asw.bukkit.listener.*;
-import io.wdsj.asw.bukkit.listener.packet.ASWBookPacketListener;
-import io.wdsj.asw.bukkit.listener.packet.ASWChatPacketListener;
 import io.wdsj.asw.bukkit.manage.punish.PlayerAltController;
 import io.wdsj.asw.bukkit.manage.punish.PlayerShadowController;
 import io.wdsj.asw.bukkit.manage.punish.ViolationCounter;
@@ -33,6 +29,7 @@ import io.wdsj.asw.bukkit.proxy.bungee.BungeeReceiver;
 import io.wdsj.asw.bukkit.proxy.velocity.VelocityChannel;
 import io.wdsj.asw.bukkit.proxy.velocity.VelocityReceiver;
 import io.wdsj.asw.bukkit.service.BukkitLibraryService;
+import io.wdsj.asw.bukkit.service.ListenerService;
 import io.wdsj.asw.bukkit.service.hook.VoiceChatHookService;
 import io.wdsj.asw.bukkit.setting.PluginMessages;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
@@ -49,7 +46,6 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -72,7 +68,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     public static SettingsManager messagesManager;
     public static final String PLUGIN_VERSION = PluginVersionTemplate.VERSION;
     private static AdvancedSensitiveWords instance;
-    private static boolean USE_PE = false;
+    public static boolean USE_PE = false;
     private static TaskScheduler scheduler;
     private static boolean isEventMode = false;
     public static Logger LOGGER;
@@ -80,6 +76,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     private OllamaProcessor ollamaProcessor;
     private OpenAIProcessor openaiProcessor;
     private VoiceChatHookService voiceChatHookService;
+    private ListenerService listenerService;
     private CachingPermTool permCache;
     public static TaskScheduler getScheduler() {
         return scheduler;
@@ -90,6 +87,9 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     }
     public static boolean isEventMode() {
         return isEventMode;
+    }
+    public static void setEventMode(boolean mode) {
+        isEventMode = mode;
     }
     private MyScheduledTask violationResetTask;
     private boolean isFirstLoad;
@@ -138,29 +138,8 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         WordReplace.clearCache();
         doInitTasks();
         if (settingsManager.getProperty(PluginSettings.PURGE_LOG_FILE)) purgeLog();
-        if (!isEventMode) {
-            if (USE_PE) {
-                try {
-                    if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
-                        PacketEvents.getAPI().getEventManager().registerListener(ASWChatPacketListener.class.getConstructor().newInstance());
-                    }
-                    if (settingsManager.getProperty(PluginSettings.ENABLE_BOOK_EDIT_CHECK)) {
-                        PacketEvents.getAPI().getEventManager().registerListener(ASWBookPacketListener.class.getConstructor().newInstance());
-                    }
-                } catch (Exception e) {
-                    LOGGER.severe("Failed to register packetevents listener." +
-                            " This should not happen, please report to the author");
-                    LOGGER.severe(e.getMessage());
-                }
-                PacketEvents.getAPI().init();
-            } else {
-                LOGGER.warning("Cannot use packetevents, using event mode instead.");
-                registerEventBasedListener();
-                isEventMode = true;
-            }
-        } else {
-            registerEventBasedListener();
-        }
+        listenerService = new ListenerService(this);
+        listenerService.registerListeners();
         Objects.requireNonNull(getCommand("advancedsensitivewords")).setExecutor(new ConstructCommandExecutor());
         Objects.requireNonNull(getCommand("asw")).setExecutor(new ConstructCommandExecutor());
         Objects.requireNonNull(getCommand("advancedsensitivewords")).setTabCompleter(new ConstructTabCompleter());
@@ -170,9 +149,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("default_list", () -> String.valueOf(settingsManager.getProperty(PluginSettings.ENABLE_DEFAULT_WORDS))));
         metrics.addCustomChart(new SimplePie("java_vendor", TimingUtils::getJvmVendor));
         metrics.addCustomChart(new SingleLineChart("total_filtered_messages", () -> (int) messagesFilteredNum.get()));
-        getServer().getPluginManager().registerEvents(new ShadowListener(), this);
-        getServer().getPluginManager().registerEvents(new AltsListener(), this);
-        getServer().getPluginManager().registerEvents(new FakeMessageExecutor(), this);
         if (settingsManager.getProperty(PluginSettings.ENABLE_OLLAMA_AI_MODEL_CHECK)) {
             ollamaProcessor = new OllamaProcessor();
             ollamaProcessor.initService(settingsManager.getProperty(PluginSettings.OLLAMA_AI_API_ADDRESS), settingsManager.getProperty(PluginSettings.OLLAMA_AI_MODEL_NAME), settingsManager.getProperty(PluginSettings.AI_MODEL_TIMEOUT), settingsManager.getProperty(PluginSettings.OLLAMA_AI_DEBUG_LOG));
@@ -181,38 +157,10 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
             openaiProcessor = new OpenAIProcessor();
             openaiProcessor.initService(settingsManager.getProperty(PluginSettings.OPENAI_API_KEY), settingsManager.getProperty(PluginSettings.OPENAI_DEBUG_LOG));
         }
-        if (settingsManager.getProperty(PluginSettings.ENABLE_SIGN_EDIT_CHECK)) {
-            getServer().getPluginManager().registerEvents(new SignListener(), this);
-        }
-        if (settingsManager.getProperty(PluginSettings.ENABLE_ANVIL_EDIT_CHECK)) {
-            getServer().getPluginManager().registerEvents(new AnvilListener(), this);
-        }
-        if (settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_NAME_CHECK)) {
-            getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
-        }
-        if (settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) {
-            getServer().getPluginManager().registerEvents(new PlayerItemListener(), this);
-            if (settingsManager.getProperty(PluginSettings.ITEM_MONITOR_SPAWN)) {
-                getServer().getPluginManager().registerEvents(new ItemSpawnListener(), this);
-            }
-        }
-        if (settingsManager.getProperty(PluginSettings.CHAT_BROADCAST_CHECK)) {
-            if (isClassLoaded("org.bukkit.event.server.BroadcastMessageEvent")) {
-                getServer().getPluginManager().registerEvents(new BroadCastListener(), this);
-            } else {
-                LOGGER.info("BroadcastMessage is not available, please disable chat broadcast check in config.yml");
-            }
-        }
-        if (settingsManager.getProperty(PluginSettings.CLEAN_PLAYER_DATA_CACHE)) {
-            getServer().getPluginManager().registerEvents(new QuitDataCleaner(), this);
-        }
         getServer().getMessenger().registerOutgoingPluginChannel(this, VelocityChannel.CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, VelocityChannel.CHANNEL, new VelocityReceiver());
         getServer().getMessenger().registerOutgoingPluginChannel(this, BungeeCordChannel.BUNGEE_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, BungeeCordChannel.BUNGEE_CHANNEL, new BungeeReceiver());
-        if (settingsManager.getProperty(PluginSettings.CHECK_FOR_UPDATE)) {
-            getServer().getPluginManager().registerEvents(new JoinUpdateNotifier(), this);
-        }
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI") &&
             settingsManager.getProperty(PluginSettings.ENABLE_PLACEHOLDER)) {
             new ASWExpansion().register();
@@ -297,14 +245,9 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!isEventMode) {
-            if (USE_PE) {
-                PacketEvents.getAPI().terminate();
-            }
-        }
+        listenerService.unregisterListeners();
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         getServer().getMessenger().unregisterIncomingPluginChannel(this);
-        HandlerList.unregisterAll(this);
         TimingUtils.resetStatistics();
         ChatContext.forceClearContext();
         SignContext.forceClearContext();
@@ -333,13 +276,4 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         LOGGER.info("AdvancedSensitiveWords is disabled!");
     }
 
-    private void registerEventBasedListener() {
-        if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
-            getServer().getPluginManager().registerEvents(new ChatListener(), this);
-            getServer().getPluginManager().registerEvents(new CommandListener(), this);
-        }
-        if (settingsManager.getProperty(PluginSettings.ENABLE_BOOK_EDIT_CHECK)) {
-            getServer().getPluginManager().registerEvents(new BookListener(), this);
-        }
-    }
 }
