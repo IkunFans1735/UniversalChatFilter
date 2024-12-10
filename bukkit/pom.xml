@@ -50,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.1</version>
+                <version>3.11.2</version>
                 <configuration>
                     <source>${java.version}</source>
                     <encoding>${project.build.sourceEncoding}</encoding>
@@ -292,7 +292,7 @@
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>sensitive-word</artifactId>
-            <version>0.22.0</version>
+            <version>0.23.0</version>
             <scope>compile</scope>
         </dependency>
 
