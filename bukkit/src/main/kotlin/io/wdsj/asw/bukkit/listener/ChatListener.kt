@@ -5,6 +5,7 @@ import fr.xephi.authme.api.v3.AuthMeApi
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords.*
 import io.wdsj.asw.bukkit.ai.OllamaProcessor
 import io.wdsj.asw.bukkit.ai.OpenAIProcessor
+import io.wdsj.asw.bukkit.listener.abstraction.AbstractFakeMessageExecutor
 import io.wdsj.asw.bukkit.manage.notice.Notifier
 import io.wdsj.asw.bukkit.manage.punish.Punishment
 import io.wdsj.asw.bukkit.manage.punish.ViolationCounter
@@ -43,7 +44,7 @@ class ChatListener : Listener {
             val processedMessage = sensitiveWordBs.replace(originalMessage)
             if (isCancelMode) {
                 if (settingsManager.getProperty(PluginSettings.CHAT_FAKE_MESSAGE_ON_CANCEL)) {
-                    FakeMessageExecutor.selfIncrement(player)
+                    AbstractFakeMessageExecutor.selfIncrement(player)
                 } else {
                     event.isCancelled = true
                 }
@@ -168,7 +169,7 @@ class ChatListener : Listener {
                 ChatContext.pollPlayerContext(player)
                 Utils.messagesFilteredNum.getAndIncrement()
                 if (settingsManager.getProperty(PluginSettings.CHAT_FAKE_MESSAGE_ON_CANCEL)) {
-                    FakeMessageExecutor.selfIncrement(player)
+                    AbstractFakeMessageExecutor.selfIncrement(player)
                 } else {
                     event.isCancelled = true
                 }

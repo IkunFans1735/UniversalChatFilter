@@ -9,8 +9,11 @@ import io.wdsj.asw.bukkit.listener.packet.ASWChatPacketListener;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
 import io.wdsj.asw.bukkit.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+
+import java.lang.reflect.Method;
 
 import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.*;
 import static io.wdsj.asw.bukkit.util.Utils.isClassLoaded;
@@ -50,7 +53,7 @@ public class ListenerService {
         }
         registerEventListener(new ShadowListener());
         registerEventListener(new AltsListener());
-        if (!isModernPaper || !registerEventListener(new PaperFakeMessageExecutor())) {
+        if (!registerEventListener(new PaperFakeMessageExecutor())) {
             registerEventListener(new FakeMessageExecutor());
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_SIGN_EDIT_CHECK)) {
@@ -94,9 +97,13 @@ public class ListenerService {
     
     
     private boolean registerEventListener(Listener listener) {
+        if (!isTargetListenerHasAllClasses(listener)) {
+            return false;
+        }
         if (isPaperListener(listener)) {
             if (isModernPaper) {
                 Bukkit.getPluginManager().registerEvents(listener, plugin);
+                LOGGER.info("Using Paper events for " + listener.getClass().getSimpleName() + ".");
                 return true;
             }
             return false;
@@ -104,6 +111,18 @@ public class ListenerService {
             Bukkit.getPluginManager().registerEvents(listener, plugin);
             return true;
         }
+    }
+
+    private boolean isTargetListenerHasAllClasses(Listener listener) {
+        try {
+            Method[] methods = listener.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                if (method.getAnnotation(EventHandler.class) == null || method.getParameterCount() != 1) continue;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
     private boolean isPaperListener(Listener listener) {
         return listener.getClass().getAnnotation(PaperEventHandler.class) != null;
