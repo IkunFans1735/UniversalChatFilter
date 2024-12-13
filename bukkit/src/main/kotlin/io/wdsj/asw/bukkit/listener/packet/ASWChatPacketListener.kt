@@ -142,65 +142,51 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                     && OpenAIProcessor.isOpenAiInit && Utils.isNotCommand(originalMessage)) {
                     OpenAIProcessor.process(originalMessage)
                         .thenAccept {
-                            val results = it?.results() ?: return@thenAccept
-                            for (result in results) {
-                                if (result.isFlagged) {
-                                    val categories = result.categories()
-                                    val categoryChecks = listOf(
-                                        categories.hate() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_HATE_CHECK),
-                                        categories.hateThreatening() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_HATE_THREATENING_CHECK),
-                                        categories.selfHarm() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_SELF_HARM_CHECK),
-                                        categories.sexual() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_SEXUAL_CONTENT_CHECK),
-                                        categories.sexualMinors() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_SEXUAL_MINORS_CHECK),
-                                        categories.violence() to settingsManager.getProperty(PluginSettings.OPENAI_ENABLE_VIOLENCE_CHECK),
+                            val flag = it ?: return@thenAccept
+                            if (flag) {
+                                val unsupportedList = Collections.singletonList("Unsupported")
+                                Utils.messagesFilteredNum.getAndIncrement()
+                                if (settingsManager.getProperty(PluginSettings.CHAT_SEND_MESSAGE)) {
+                                    MessageUtils.sendMessage(
+                                        player,
+                                        messagesManager.getProperty(PluginMessages.MESSAGE_ON_CHAT)
+                                            .replace("%integrated_player%", player.name)
+                                            .replace("%integrated_message%", originalMessage)
                                     )
-                                    val isViolated = categoryChecks.any { (category, setting) -> category && setting }
-                                    if (isViolated) {
-                                        val unsupportedList = Collections.singletonList("Unsupported")
-                                        Utils.messagesFilteredNum.getAndIncrement()
-                                        if (settingsManager.getProperty(PluginSettings.CHAT_SEND_MESSAGE)) {
-                                            MessageUtils.sendMessage(
-                                                player,
-                                                messagesManager.getProperty(PluginMessages.MESSAGE_ON_CHAT)
-                                                    .replace("%integrated_player%", player.name)
-                                                    .replace("%integrated_message%", originalMessage)
-                                            )
-                                        }
-                                        if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
-                                            LoggingUtils.logViolation(
-                                                player.name + "(IP: " + user.address.address.hostAddress + ")(Chat AI)(OPENAI)",
-                                                originalMessage + unsupportedList
-                                            )
-                                        }
-                                        ViolationCounter.incrementViolationCount(player)
-                                        if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
-                                            VelocitySender.sendNotifyMessage(
-                                                player,
-                                                ModuleType.CHAT_AI,
-                                                originalMessage,
-                                                unsupportedList
-                                            )
-                                        }
-                                        if (settingsManager.getProperty(PluginSettings.HOOK_BUNGEECORD)) {
-                                            BungeeSender.sendNotifyMessage(
-                                                player,
-                                                ModuleType.CHAT_AI,
-                                                originalMessage,
-                                                unsupportedList
-                                            )
-                                        }
-                                        if (settingsManager.getProperty(PluginSettings.NOTICE_OPERATOR)) {
-                                            Notifier.notice(
-                                                player,
-                                                ModuleType.CHAT_AI,
-                                                originalMessage,
-                                                unsupportedList
-                                            )
-                                        }
-                                        if (settingsManager.getProperty(PluginSettings.CHAT_PUNISH) && settingsManager.getProperty(PluginSettings.OPENAI_AI_PUNISH)) {
-                                            getScheduler().runTask { Punishment.punish(player) }
-                                        }
-                                    }
+                                }
+                                if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
+                                    LoggingUtils.logViolation(
+                                        player.name + "(IP: " + user.address.address.hostAddress + ")(Chat AI)(OPENAI)",
+                                        originalMessage + unsupportedList
+                                    )
+                                }
+                                ViolationCounter.incrementViolationCount(player)
+                                if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
+                                    VelocitySender.sendNotifyMessage(
+                                        player,
+                                        ModuleType.CHAT_AI,
+                                        originalMessage,
+                                        unsupportedList
+                                    )
+                                }
+                                if (settingsManager.getProperty(PluginSettings.HOOK_BUNGEECORD)) {
+                                    BungeeSender.sendNotifyMessage(
+                                        player,
+                                        ModuleType.CHAT_AI,
+                                        originalMessage,
+                                        unsupportedList
+                                    )
+                                }
+                                if (settingsManager.getProperty(PluginSettings.NOTICE_OPERATOR)) {
+                                    Notifier.notice(
+                                        player,
+                                        ModuleType.CHAT_AI,
+                                        originalMessage,
+                                        unsupportedList
+                                    )
+                                }
+                                if (settingsManager.getProperty(PluginSettings.CHAT_PUNISH) && settingsManager.getProperty(PluginSettings.OPENAI_AI_PUNISH)) {
+                                    getScheduler().runTask { Punishment.punish(player) }
                                 }
                             }
                         }
