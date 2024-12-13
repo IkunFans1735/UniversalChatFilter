@@ -53,40 +53,40 @@ public class ListenerService {
         } else {
             registerChatBookEventListeners();
         }
-        registerEventListener(new ShadowListener());
-        registerEventListener(new AltsListener());
-        if (!registerEventListener(new PaperFakeMessageExecutor())) {
-            registerEventListener(new FakeMessageExecutor());
+        registerEventListener(ShadowListener.class);
+        registerEventListener(AltsListener.class);
+        if (!registerEventListener(PaperFakeMessageExecutor.class)) {
+            registerEventListener(FakeMessageExecutor.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_SIGN_EDIT_CHECK)) {
-            registerEventListener(new SignListener());
+            registerEventListener(SignListener.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_ANVIL_EDIT_CHECK)) {
-            registerEventListener(new AnvilListener());
+            registerEventListener(AnvilListener.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_NAME_CHECK)) {
-            registerEventListener(new PlayerLoginListener());
+            registerEventListener(PlayerLoginListener.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) {
-            registerEventListener(new PlayerItemListener());
+            registerEventListener(PlayerItemListener.class);
             if (settingsManager.getProperty(PluginSettings.ITEM_MONITOR_SPAWN)) {
-                if (!registerEventListener(new PaperItemSpawnListener())) {
-                    registerEventListener(new ItemSpawnListener());
+                if (!registerEventListener(PaperItemSpawnListener.class)) {
+                    registerEventListener(ItemSpawnListener.class);
                 }
             }
         }
         if (settingsManager.getProperty(PluginSettings.CHAT_BROADCAST_CHECK)) {
             if (isClassLoaded("org.bukkit.event.server.BroadcastMessageEvent")) {
-                registerEventListener(new BroadCastListener());
+                registerEventListener(BroadCastListener.class);
             } else {
                 LOGGER.info("BroadcastMessage is not available, please disable chat broadcast check in config.yml");
             }
         }
         if (settingsManager.getProperty(PluginSettings.CLEAN_PLAYER_DATA_CACHE)) {
-            registerEventListener(new QuitDataCleaner());
+            registerEventListener(QuitDataCleaner.class);
         }
         if (settingsManager.getProperty(PluginSettings.CHECK_FOR_UPDATE)) {
-            registerEventListener(new JoinUpdateNotifier());
+            registerEventListener(JoinUpdateNotifier.class);
         }
     }
 
@@ -100,45 +100,55 @@ public class ListenerService {
     }
     
     
-    private boolean registerEventListener(Listener listener) {
-        if (!isTargetListenerHasAllClasses(listener)) {
+    private boolean registerEventListener(Class<? extends Listener> listenerClass) {
+        if (!isTargetListenerHasAllClasses(listenerClass)) {
             return false;
         }
-        if (isPaperListener(listener)) {
+        if (isPaperListener(listenerClass)) {
             if (isModernPaper) {
-                Bukkit.getPluginManager().registerEvents(listener, plugin);
-                LOGGER.info("Using Paper event listener " + listener.getClass().getSimpleName() + ".");
+                Bukkit.getPluginManager().registerEvents(newListenerWithNoArgConstructor(listenerClass), plugin);
+                LOGGER.info("Using Paper event listener " + listenerClass.getSimpleName() + ".");
                 return true;
             }
             return false;
         } else {
-            Bukkit.getPluginManager().registerEvents(listener, plugin);
+            Bukkit.getPluginManager().registerEvents(newListenerWithNoArgConstructor(listenerClass), plugin);
             return true;
         }
     }
 
-    private boolean isTargetListenerHasAllClasses(Listener listener) {
+    private Listener newListenerWithNoArgConstructor(Class<? extends Listener> listenerClass) {
         try {
-            Method[] methods = listener.getClass().getDeclaredMethods();
+            return listenerClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to register listener " + listenerClass.getSimpleName());
+        }
+    }
+
+    private boolean isTargetListenerHasAllClasses(Class<? extends Listener> listener) {
+        try {
+            Method[] methods = listener.getDeclaredMethods();
             for (Method method : methods) {
-                if (method.getAnnotation(EventHandler.class) == null || method.getParameterCount() != 1) continue;
+                //noinspection StatementWithEmptyBody
+                if (method.getAnnotation(EventHandler.class) == null || method.getParameterCount() != 1) {
+                }
             }
         } catch (Exception e) {
             return false;
         }
         return true;
     }
-    private boolean isPaperListener(Listener listener) {
-        return listener.getClass().getAnnotation(PaperEventHandler.class) != null;
+    private boolean isPaperListener(Class<? extends Listener> listener) {
+        return listener.getAnnotation(PaperEventHandler.class) != null;
     }
 
     private void registerChatBookEventListeners() {
         if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
-            registerEventListener(new ChatListener());
-            registerEventListener(new CommandListener());
+            registerEventListener(ChatListener.class);
+            registerEventListener(CommandListener.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_BOOK_EDIT_CHECK)) {
-            registerEventListener(new BookListener());
+            registerEventListener(BookListener.class);
         }
     }
 
