@@ -43,7 +43,14 @@ public class BukkitLibraryService {
     }
 
     public void loadRequired() {
-        libraryManager.loadLibraries(openai4j, caffeine, ollama4j);
+        libraryManager.loadLibraries(caffeine);
+    }
+    public void loadOllamaOptional() {
+        libraryManager.loadLibrary(ollama4j);
+    }
+
+    public void loadOpenAiOptional() {
+        libraryManager.loadLibrary(openai4j);
     }
 
     public void loadWhisperJniOptional() {
