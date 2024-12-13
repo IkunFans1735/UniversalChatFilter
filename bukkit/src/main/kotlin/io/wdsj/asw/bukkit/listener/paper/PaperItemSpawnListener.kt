@@ -1,6 +1,7 @@
 package io.wdsj.asw.bukkit.listener.paper
 
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords.*
+import io.wdsj.asw.bukkit.annotation.PaperEventHandler
 import io.wdsj.asw.bukkit.permission.PermissionsEnum
 import io.wdsj.asw.bukkit.permission.cache.CachingPermTool
 import io.wdsj.asw.bukkit.setting.PluginSettings
@@ -16,6 +17,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ItemSpawnEvent
 
+@PaperEventHandler
 class PaperItemSpawnListener : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun onItemSpawn(event: ItemSpawnEvent) {

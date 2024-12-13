@@ -174,10 +174,6 @@
                                     <pattern>ch.jalu.configme</pattern>
                                     <shadedPattern>io.wdsj.asw.bukkit.libs.config</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>io.wdsj.asw.bukkit.libs.cp</shadedPattern>
-                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
