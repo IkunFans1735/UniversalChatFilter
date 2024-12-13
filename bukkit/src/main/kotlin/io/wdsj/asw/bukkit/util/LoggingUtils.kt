@@ -11,12 +11,16 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 object LoggingUtils {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss")
-    private lateinit var loggingThreadPool: ExecutorService
+    private val loggingThreadPool = Executors.newSingleThreadExecutor(
+        ThreadFactoryBuilder()
+            .setNameFormat("ASW Logging Thread")
+            .setDaemon(true)
+            .build()
+    )
     @JvmStatic
     fun logViolation(playerName: String, violationReason: String) {
         loggingThreadPool.submit {
@@ -49,15 +53,4 @@ object LoggingUtils {
         LOGGER.info("Successfully purged violations")
     }
 
-    @JvmStatic
-    fun start() {
-        loggingThreadPool = Executors.newSingleThreadExecutor(
-            ThreadFactoryBuilder().setNameFormat("ASW Logging Thread-%d").setDaemon(true).build()
-        )
-    }
-
-    @JvmStatic
-    fun stop() {
-        loggingThreadPool.shutdown()
-    }
 }

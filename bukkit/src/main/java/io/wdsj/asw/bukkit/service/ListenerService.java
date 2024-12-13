@@ -6,6 +6,8 @@ import io.wdsj.asw.bukkit.annotation.PaperEventHandler;
 import io.wdsj.asw.bukkit.listener.*;
 import io.wdsj.asw.bukkit.listener.packet.ASWBookPacketListener;
 import io.wdsj.asw.bukkit.listener.packet.ASWChatPacketListener;
+import io.wdsj.asw.bukkit.listener.paper.PaperFakeMessageExecutor;
+import io.wdsj.asw.bukkit.listener.paper.PaperItemSpawnListener;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
 import io.wdsj.asw.bukkit.util.Utils;
 import org.bukkit.Bukkit;
@@ -68,7 +70,9 @@ public class ListenerService {
         if (settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) {
             registerEventListener(new PlayerItemListener());
             if (settingsManager.getProperty(PluginSettings.ITEM_MONITOR_SPAWN)) {
-                registerEventListener(new ItemSpawnListener());
+                if (!registerEventListener(new PaperItemSpawnListener())) {
+                    registerEventListener(new ItemSpawnListener());
+                }
             }
         }
         if (settingsManager.getProperty(PluginSettings.CHAT_BROADCAST_CHECK)) {
@@ -103,7 +107,7 @@ public class ListenerService {
         if (isPaperListener(listener)) {
             if (isModernPaper) {
                 Bukkit.getPluginManager().registerEvents(listener, plugin);
-                LOGGER.info("Using Paper events for " + listener.getClass().getSimpleName() + ".");
+                LOGGER.info("Using Paper event listener " + listener.getClass().getSimpleName() + ".");
                 return true;
             }
             return false;

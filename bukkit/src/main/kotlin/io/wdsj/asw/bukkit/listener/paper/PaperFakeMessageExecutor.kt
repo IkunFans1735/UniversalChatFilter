@@ -1,4 +1,4 @@
-package io.wdsj.asw.bukkit.listener
+package io.wdsj.asw.bukkit.listener.paper
 
 import io.papermc.paper.event.player.AsyncChatEvent
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager
@@ -8,11 +8,9 @@ import io.wdsj.asw.bukkit.manage.punish.PlayerAltController
 import io.wdsj.asw.bukkit.setting.PluginSettings
 import net.kyori.adventure.audience.Audience
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import java.util.concurrent.ConcurrentHashMap
 
 @PaperEventHandler
 class PaperFakeMessageExecutor : Listener, AbstractFakeMessageExecutor() {
