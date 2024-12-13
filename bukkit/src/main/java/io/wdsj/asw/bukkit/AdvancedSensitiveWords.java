@@ -134,7 +134,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         scheduler = UniversalScheduler.getScheduler(this);
         permCache = CachingPermTool.enable(this);
         BookCache.initialize();
-        LoggingUtils.start();
         WordReplace.clearCache();
         doInitTasks();
         if (settingsManager.getProperty(PluginSettings.PURGE_LOG_FILE)) purgeLog();
@@ -268,7 +267,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         SchedulingUtils.cancelTaskSafely(violationResetTask);
         if (permCache != null) permCache.disable();
         if (isInitialized) sensitiveWordBs.destroy();
-        LoggingUtils.stop();
         Objects.requireNonNull(getCommand("advancedsensitivewords")).setExecutor(null);
         Objects.requireNonNull(getCommand("asw")).setExecutor(null);
         Objects.requireNonNull(getCommand("advancedsensitivewords")).setTabCompleter(null);
