@@ -133,7 +133,7 @@ public class ListenerService {
                 if (method.getAnnotation(EventHandler.class) == null || method.getParameterCount() != 1) {
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return false;
         }
         return true;
