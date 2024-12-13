@@ -25,7 +25,7 @@ public class BukkitLibraryService {
     private static final Library caffeine = Library.builder()
             .groupId("com{}github{}ben-manes{}caffeine")
             .artifactId("caffeine")
-            .resolveTransitiveDependencies(true)
+            .resolveTransitiveDependencies(false)
             .version("2.9.3")
             .build();
 
