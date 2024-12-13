@@ -34,7 +34,6 @@ import io.wdsj.asw.bukkit.service.hook.VoiceChatHookService;
 import io.wdsj.asw.bukkit.setting.PluginMessages;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
 import io.wdsj.asw.bukkit.task.punish.ViolationResetTask;
-import io.wdsj.asw.bukkit.util.LoggingUtils;
 import io.wdsj.asw.bukkit.util.SchedulingUtils;
 import io.wdsj.asw.bukkit.util.TimingUtils;
 import io.wdsj.asw.bukkit.util.cache.BookCache;
