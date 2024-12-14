@@ -144,7 +144,9 @@ public class ListenerService {
 
     private void registerChatBookEventListeners() {
         if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
-            registerEventListener(ChatListener.class);
+            if (true) { // TODO: Resolve PaperChatListener replace mode incompatibility with TrChat
+                registerEventListener(ChatListener.class);
+            }
             registerEventListener(CommandListener.class);
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_BOOK_EDIT_CHECK)) {

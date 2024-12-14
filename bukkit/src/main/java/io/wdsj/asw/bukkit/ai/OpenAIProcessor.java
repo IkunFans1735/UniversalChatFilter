@@ -10,7 +10,6 @@ import io.wdsj.asw.bukkit.setting.PluginSettings;
 
 import java.net.Proxy;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
