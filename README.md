@@ -6,12 +6,6 @@ One-stop-shop **ultimate** anti-swear solution for your Minecraft server!
 
 [![Available on SpigotMC](https://img.shields.io/badge/Available%20on%20SpigotMC-orange?style=for-the-badge&logo=SpigotMC&logoColor=FFFFFF)](https://www.spigotmc.org/resources/advancedsensitivewords.115484/)
 
-<p align="center">
-  <img src="logo.webp" alt="logo" width="128" height="128"/>
-</p>
-
-Logo designed by GPT-4
-
 [![CodeFactor](https://www.codefactor.io/repository/github/hahawth/advancedsensitivewords/badge)](https://www.codefactor.io/repository/github/hahawth/advancedsensitivewords)
 [![QQ](https://img.shields.io/badge/QQ-361581545-blue)](https://qm.qq.com/q/sC52yJDrGi)
 
@@ -19,7 +13,7 @@ Logo designed by GPT-4
 1. Using DFA(Deterministic Finite Automata) algorithm
 2. Plug-and-play
 3. Huge and high-quality default dictionary (Over 60,000 words)
-4. Blazing fast by using packets (32,000+ queries per second on a 2-core server)
+4. Performance first, handling 1,000+ messages per second
 5. 100% compatibility with chat plugins (Tested over 30+ plugins)
 6. Full-customizable
 7. Sign check support

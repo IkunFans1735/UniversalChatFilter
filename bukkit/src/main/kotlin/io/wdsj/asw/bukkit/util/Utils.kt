@@ -38,17 +38,7 @@ object Utils {
 
     @JvmStatic
     fun canUsePE(): Boolean {
-        val protocolLib = Bukkit.getPluginManager().getPlugin("ProtocolLib")
-        Bukkit.getPluginManager().getPlugin("packetevents") ?: return false
-        if (protocolLib != null && protocolLib.isEnabled) {
-            // ProtocolLib is loaded
-            return try {
-                StringUtil.toInt(protocolLib.description.version[0].toString()) >= 5
-            } catch (e: Exception) {
-                true
-            }
-        }
-        return true
+        return Bukkit.getPluginManager().getPlugin("packetevents") != null
     }
     fun isCommand(command: String): Boolean {
         return command.startsWith("/")
