@@ -336,7 +336,7 @@
         <dependency>
             <groupId>de.maxhenkel.voicechat</groupId>
             <artifactId>voicechat-api</artifactId>
-            <version>2.5.0</version>
+            <version>2.5.27</version>
             <scope>provided</scope>
         </dependency>
 
