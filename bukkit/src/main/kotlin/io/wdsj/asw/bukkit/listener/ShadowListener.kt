@@ -11,7 +11,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 
-class ShadowListener : Listener {
+class ShadowListener : Listener { // TODO: Paper event handler
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onChat(event: AsyncPlayerChatEvent) {

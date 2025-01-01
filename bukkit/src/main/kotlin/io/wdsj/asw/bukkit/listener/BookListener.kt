@@ -34,7 +34,7 @@ class BookListener : Listener {
         val isCancelMode = settingsManager.getProperty(PluginSettings.BOOK_METHOD).equals("cancel", ignoreCase = true)
         var outMessage = ""
         var outList: List<String?> = ArrayList()
-        val originalPages = event.newBookMeta.pages
+        val originalPages = event.newBookMeta.pages // TODO: Paper event handler
         var shouldSendMessage = false
         val bookMeta = event.newBookMeta
         var pageIndex = 1
