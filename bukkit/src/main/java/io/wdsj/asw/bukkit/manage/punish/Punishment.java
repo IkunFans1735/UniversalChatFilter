@@ -3,11 +3,9 @@ package io.wdsj.asw.bukkit.manage.punish;
 import io.wdsj.asw.bukkit.proxy.bungee.BungeeSender;
 import io.wdsj.asw.bukkit.proxy.velocity.VelocitySender;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
-import io.wdsj.asw.bukkit.util.CompatibilityUtils;
 import io.wdsj.asw.bukkit.util.SchedulingUtils;
+import io.wdsj.asw.bukkit.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -21,6 +19,7 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.LOGGER;
 import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 
 public class Punishment {
+    private static final boolean hasPotionRegistry = Utils.isClassLoaded("org.bukkit.Registry");
     public static void punish(Player player) {
         List<String> punishList = settingsManager.getProperty(PluginSettings.PUNISHMENT);
         if (punishList.isEmpty()) return;
@@ -81,10 +80,8 @@ public class Punishment {
             case EFFECT:
                 if (normalPunish.length < 2) throw new IllegalArgumentException("Not enough args");
                 String effect = normalPunish[1];
-                //noinspection deprecation
-                PotionEffectType potionEffect = CompatibilityUtils.isHigherThan(20) ?
-                        Registry.POTION_EFFECT_TYPE.get(NamespacedKey.minecraft(effect.toLowerCase(Locale.ROOT))) :
-                        PotionEffectType.getByName(effect.toUpperCase(Locale.ROOT));
+                //noinspection deprecation // TODO: Remove deprecated usage
+                PotionEffectType potionEffect = PotionEffectType.getByName(effect.toUpperCase(Locale.ROOT));
                 if (potionEffect == null) throw new IllegalArgumentException("Unknown potion effect");
                 switch (normalPunish.length) {
                     case 2:

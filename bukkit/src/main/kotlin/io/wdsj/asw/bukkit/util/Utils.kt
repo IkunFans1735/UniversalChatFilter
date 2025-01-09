@@ -37,6 +37,16 @@ object Utils {
     }
 
     @JvmStatic
+    fun isClassExists(className: String): Boolean {
+        return try {
+            val url = className.replace(".", "/") + ".class"
+            return Thread.currentThread().contextClassLoader.getResource(url) != null
+        } catch (ignored: Throwable) {
+            false
+        }
+    }
+
+    @JvmStatic
     fun canUsePE(): Boolean {
         return Bukkit.getPluginManager().getPlugin("packetevents") != null
     }
