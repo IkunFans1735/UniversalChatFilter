@@ -33,15 +33,15 @@ class BookListener : Listener {
         val skipReturnLine = settingsManager.getProperty(PluginSettings.BOOK_IGNORE_NEWLINE)
         val isCancelMode = settingsManager.getProperty(PluginSettings.BOOK_METHOD).equals("cancel", ignoreCase = true)
         var outMessage = ""
-        var outList: List<String?> = ArrayList()
+        var outList: List<String> = ArrayList()
         val originalPages = event.newBookMeta.pages // TODO: Paper event handler
         var shouldSendMessage = false
         val bookMeta = event.newBookMeta
         var pageIndex = 1
         val startTime = System.currentTimeMillis()
         if (bookMeta.hasPages()) {
-            for (i in 0 until originalPages.size) {
-                var originalPage = originalPages[i]
+            for (indexedPage in originalPages) {
+                var originalPage = indexedPage
                 if (skipReturnLine) originalPage = originalPage.replace("\n", "").replace("§0", "")
                 if (settingsManager.getProperty(PluginSettings.PRE_PROCESS)) originalPage =
                     originalPage.replace(

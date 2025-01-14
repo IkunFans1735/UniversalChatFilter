@@ -1,6 +1,5 @@
 package io.wdsj.asw.bukkit.listener
 
-import com.github.houbb.heaven.util.lang.StringUtil
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords.*
 import io.wdsj.asw.bukkit.manage.notice.Notifier
 import io.wdsj.asw.bukkit.manage.punish.Punishment
@@ -22,8 +21,9 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent
 
+// TODO: Paper event handler
 class SignListener : Listener {
-    private var outMessage: String? = ""
+    private var outMessage: String = ""
     private var outList: List<String> = ArrayList()
     private var outProcessedMessage = ""
 
@@ -38,12 +38,11 @@ class SignListener : Listener {
         val indexList: MutableList<Int> = ArrayList()
         val originalMultiMessages = StringBuilder()
         for (line in 0 until event.lines.size) {
-            var originalMessage = event.getLine(line)
-            if (settingsManager.getProperty(PluginSettings.PRE_PROCESS) && originalMessage != null) originalMessage =
+            var originalMessage = event.getLine(line) ?: continue
+            if (settingsManager.getProperty(PluginSettings.PRE_PROCESS)) originalMessage =
                 originalMessage.replace(
                     Utils.preProcessRegex.toRegex(), ""
                 )
-            assert(originalMessage != null)
             val censoredWordList = sensitiveWordBs.findAll(originalMessage)
             if (censoredWordList.isNotEmpty()) {
                 val processedMessage = sensitiveWordBs.replace(originalMessage)
@@ -57,7 +56,7 @@ class SignListener : Listener {
                 }
                 event.setLine(line, processedMessage)
                 shouldSendMessage = true
-            } else if (StringUtil.isNotEmptyTrim(originalMessage)) {
+            } else if (originalMessage.trim().isNotEmpty()) {
                 indexList.add(line)
                 originalMultiMessages.append(originalMessage)
             }

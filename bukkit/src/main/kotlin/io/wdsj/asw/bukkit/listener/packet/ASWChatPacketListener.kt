@@ -30,10 +30,6 @@ import io.wdsj.asw.bukkit.util.message.MessageUtils
 import org.bukkit.entity.Player
 import java.util.*
 
-/**
- * @author HaHaWTH & HeyWTF_IS_That and 0D00_0721
- * Made with ❤
- */
 class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW) {
     override fun onPacketReceive(event: PacketReceiveEvent) {
         if (!settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) return
