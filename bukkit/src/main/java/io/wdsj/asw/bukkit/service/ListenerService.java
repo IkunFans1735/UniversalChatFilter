@@ -6,6 +6,7 @@ import io.wdsj.asw.bukkit.annotation.PaperEventHandler;
 import io.wdsj.asw.bukkit.listener.*;
 import io.wdsj.asw.bukkit.listener.packet.ASWBookPacketListener;
 import io.wdsj.asw.bukkit.listener.packet.ASWChatPacketListener;
+import io.wdsj.asw.bukkit.listener.paper.PaperChunkLoadListener;
 import io.wdsj.asw.bukkit.listener.paper.PaperFakeMessageExecutor;
 import io.wdsj.asw.bukkit.listener.paper.PaperItemSpawnListener;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
@@ -88,6 +89,7 @@ public class ListenerService {
         if (settingsManager.getProperty(PluginSettings.CHECK_FOR_UPDATE)) {
             registerEventListener(JoinUpdateNotifier.class);
         }
+        registerEventListener(PaperChunkLoadListener.class);
     }
 
     public void unregisterListeners() {

@@ -1,16 +1,26 @@
 package io.wdsj.asw.bukkit.util
 
 import com.github.houbb.heaven.util.lang.StringUtil
+import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords
 import io.wdsj.asw.bukkit.setting.PluginSettings
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicLong
 
 object Utils {
     @JvmField
     val messagesFilteredNum: AtomicLong = AtomicLong(0)
+
+    val commonWorker: ExecutorService = Executors.newCachedThreadPool(
+        ThreadFactoryBuilder()
+            .setNameFormat("ASW Common Worker-%d")
+            .setPriority(Thread.NORM_PRIORITY - 1)
+            .build()
+    )
 
     @JvmStatic
     fun getPlayerIp(player: Player): String {
