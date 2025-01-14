@@ -65,10 +65,6 @@ object SchedulingUtils {
 
     @JvmStatic
     fun <T> callSyncMethod(callable: Callable<T>): T {
-        try {
-            return AdvancedSensitiveWords.getScheduler().callSyncMethod(callable).get()
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
+        return AdvancedSensitiveWords.getScheduler().callSyncMethod(callable).get()
     }
 }
