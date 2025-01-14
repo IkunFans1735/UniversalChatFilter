@@ -20,11 +20,10 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 /**
  * OpenAI Moderation Processor.
  */
-public class OpenAIProcessor implements AIProcessor {
+public enum OpenAIProcessor implements AIProcessor {
+    INSTANCE;
     public static boolean isOpenAiInit = false;
     private static OpenAiClient client;
-    public OpenAIProcessor() {
-    }
 
     /**
      * Initialize the OpenAI moderation service.

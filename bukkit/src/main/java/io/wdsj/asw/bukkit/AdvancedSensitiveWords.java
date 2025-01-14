@@ -72,8 +72,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     private static boolean isEventMode = false;
     public static Logger LOGGER;
     private static BukkitLibraryService libraryService;
-    private OllamaProcessor ollamaProcessor;
-    private OpenAIProcessor openaiProcessor;
     private VoiceChatHookService voiceChatHookService;
     private ListenerService listenerService;
     private CachingPermTool permCache;
@@ -149,13 +147,11 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         metrics.addCustomChart(new SingleLineChart("total_filtered_messages", () -> (int) messagesFilteredNum.get()));
         if (settingsManager.getProperty(PluginSettings.ENABLE_OLLAMA_AI_MODEL_CHECK)) {
             libraryService.loadOllamaOptional();
-            ollamaProcessor = new OllamaProcessor();
-            ollamaProcessor.initService(settingsManager.getProperty(PluginSettings.OLLAMA_AI_API_ADDRESS), settingsManager.getProperty(PluginSettings.OLLAMA_AI_MODEL_NAME), settingsManager.getProperty(PluginSettings.AI_MODEL_TIMEOUT), settingsManager.getProperty(PluginSettings.OLLAMA_AI_DEBUG_LOG));
+            OllamaProcessor.INSTANCE.initService(settingsManager.getProperty(PluginSettings.OLLAMA_AI_API_ADDRESS), settingsManager.getProperty(PluginSettings.OLLAMA_AI_MODEL_NAME), settingsManager.getProperty(PluginSettings.AI_MODEL_TIMEOUT), settingsManager.getProperty(PluginSettings.OLLAMA_AI_DEBUG_LOG));
         }
         if (settingsManager.getProperty(PluginSettings.ENABLE_OPENAI_AI_MODEL_CHECK)) {
             libraryService.loadOpenAiOptional();
-            openaiProcessor = new OpenAIProcessor();
-            openaiProcessor.initService(settingsManager.getProperty(PluginSettings.OPENAI_API_KEY), settingsManager.getProperty(PluginSettings.OPENAI_DEBUG_LOG));
+            OpenAIProcessor.INSTANCE.initService(settingsManager.getProperty(PluginSettings.OPENAI_API_KEY), settingsManager.getProperty(PluginSettings.OPENAI_DEBUG_LOG));
         }
         getServer().getMessenger().registerOutgoingPluginChannel(this, VelocityChannel.CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, VelocityChannel.CHANNEL, new VelocityReceiver());
@@ -253,12 +249,6 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         SignContext.forceClearContext();
         PlayerShadowController.clear();
         PlayerAltController.clear();
-        if (ollamaProcessor != null) {
-            ollamaProcessor.shutdown();
-        }
-        if (openaiProcessor != null) {
-            openaiProcessor.shutdown();
-        }
         if (voiceChatHookService != null) {
             voiceChatHookService.unregister();
         }

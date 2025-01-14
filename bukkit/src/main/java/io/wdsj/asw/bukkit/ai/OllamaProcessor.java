@@ -15,13 +15,12 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 /**
  * Ollama AI processor
  */
-public class OllamaProcessor implements AIProcessor {
+public enum OllamaProcessor implements AIProcessor {
+    INSTANCE;
     public static boolean isOllamaInit = false;
     private static PromptBuilder promptBuilder;
     private static OllamaAPI api;
     private static String modelName;
-    public OllamaProcessor() {
-    }
 
     /**
      * Initialize the Ollama service
