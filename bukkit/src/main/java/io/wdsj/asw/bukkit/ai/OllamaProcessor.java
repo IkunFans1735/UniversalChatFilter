@@ -52,15 +52,6 @@ public enum OllamaProcessor implements AIProcessor {
         isOllamaInit = true;
     }
 
-    @Override
-    public void shutdown() {
-        if (!THREAD_POOL.isShutdown()) {
-            THREAD_POOL.shutdownNow();
-        }
-        api = null;
-        isOllamaInit = false;
-    }
-
     /**
      * Process the input message using OllamaProcessor
      * @param inputMessage The message to process

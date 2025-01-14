@@ -45,17 +45,6 @@ public enum OpenAIProcessor implements AIProcessor {
         isOpenAiInit = true;
     }
 
-    @Override
-    public void shutdown() {
-        if (isOpenAiInit && client != null) {
-            client.shutdown();
-        }
-        if (!THREAD_POOL.isShutdown()) {
-            THREAD_POOL.shutdownNow();
-        }
-        isOpenAiInit = false;
-    }
-
     /**
      * Process the input message using OpenAI moderation.
      * @param inputMessage the input message
