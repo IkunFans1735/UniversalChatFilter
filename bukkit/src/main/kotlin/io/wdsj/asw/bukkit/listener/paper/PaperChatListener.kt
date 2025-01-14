@@ -35,7 +35,6 @@ import java.util.*
 @PaperEventHandler
 @Suppress("unused")
 class PaperChatListener : Listener {
-
     @EventHandler(priority = EventPriority.MONITOR)
     fun onChat(event: AsyncChatEvent) {
         if (!settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) return
