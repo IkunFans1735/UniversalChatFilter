@@ -21,7 +21,7 @@ class PaperChunkLoadListener : Listener {
         val potentialSignPositions = ArrayList<Triple<Int, Int, Int>>()
         val minY = event.chunk.world.minHeight
         val maxY = event.chunk.world.maxHeight
-        CompletableFuture.runAsync({
+        CompletableFuture.supplyAsync({
             for (x in 0 until 16) {
                 for (z in 0 until 16) {
                     for (y in minY until maxY) {
@@ -33,7 +33,6 @@ class PaperChunkLoadListener : Listener {
                     }
                 }
             }
-
         }, Utils.commonWorker)
             .thenRun {
                 if (potentialSignPositions.isNotEmpty()) {
@@ -42,7 +41,9 @@ class PaperChunkLoadListener : Listener {
                     LOGGER.warning("Signs found at: $potentialSignPositions")
                     for (triple in potentialSignPositions) {
                         val block = event.chunk.getBlock(triple.first, triple.second, triple.third)
+                        LOGGER.info("Sign at (${triple.first}, ${triple.second}, ${triple.third}), ${block.state}")
                         val state = block.state
+                        LOGGER.info(state.toString())
                         if (state is Sign) {
                             val lines = state.getSide(Side.FRONT)
 
