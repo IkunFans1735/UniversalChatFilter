@@ -14,7 +14,4 @@ public interface AIProcessor {
      * Shared thread pool for AI processors
      */
     ExecutorService THREAD_POOL = VirtualThreadUtils.newVirtualThreadPerTaskExecutorOrProvided(Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("ASW AIProcessor Thread-%d").setDaemon(true).build()));
-    default void shutdown() {
-        THREAD_POOL.shutdownNow();
-    }
 }
