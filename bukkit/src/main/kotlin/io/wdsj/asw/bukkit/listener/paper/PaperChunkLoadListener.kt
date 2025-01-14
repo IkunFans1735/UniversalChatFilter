@@ -43,6 +43,7 @@ class PaperChunkLoadListener : Listener {
                         val block = event.chunk.getBlock(triple.first, triple.second, triple.third)
                         LOGGER.info("Sign at (${triple.first}, ${triple.second}, ${triple.third}), ${block.state}")
                         val state = block.state
+                        // TODO: Implement actual logic here
                         LOGGER.info(state.toString())
                         if (state is Sign) {
                             val lines = state.getSide(Side.FRONT)
