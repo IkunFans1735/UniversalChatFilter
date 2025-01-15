@@ -6,10 +6,6 @@ import io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager
 import io.wdsj.asw.bukkit.setting.PluginSettings
 import java.util.concurrent.TimeUnit
 
-/**
- * Cache utilities class for Book detections.
- * @author HaHaWTH & HeyWTF_IS_That and 0D00_0721
- */
 object BookCache {
     private lateinit var cache: Cache<String, BookCacheEntry>
     fun isBookCached(content: String): Boolean {

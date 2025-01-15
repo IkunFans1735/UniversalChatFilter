@@ -1,6 +1,5 @@
 package io.wdsj.asw.bukkit.util
 
-import com.github.houbb.heaven.util.lang.StringUtil
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords
 import io.wdsj.asw.bukkit.setting.PluginSettings
 import org.bukkit.Bukkit
