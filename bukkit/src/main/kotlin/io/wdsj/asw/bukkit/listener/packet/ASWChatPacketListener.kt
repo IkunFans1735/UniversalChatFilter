@@ -87,7 +87,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                 return
             } else {
                 if (settingsManager.getProperty(PluginSettings.ENABLE_OLLAMA_AI_MODEL_CHECK)
-                    && OllamaProcessor.isOllamaInit && Utils.isNotCommand(originalMessage)) {
+                    && OllamaProcessor.INSTANCE.isInitialized && Utils.isNotCommand(originalMessage)) {
                     OllamaProcessor.process(originalMessage)
                         .thenAccept {
                             try {
@@ -135,7 +135,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                 }
 
                 if (settingsManager.getProperty(PluginSettings.ENABLE_OPENAI_AI_MODEL_CHECK)
-                    && OpenAIProcessor.isOpenAiInit && Utils.isNotCommand(originalMessage)) {
+                    && OpenAIProcessor.INSTANCE.isInitialized && Utils.isNotCommand(originalMessage)) {
                     OpenAIProcessor.process(originalMessage)
                         .thenAccept {
                             val flag = it ?: return@thenAccept

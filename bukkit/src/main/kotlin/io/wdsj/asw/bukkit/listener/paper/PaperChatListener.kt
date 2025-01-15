@@ -94,7 +94,7 @@ class PaperChatListener : Listener {
             return
         } else {
             if (settingsManager.getProperty(PluginSettings.ENABLE_OLLAMA_AI_MODEL_CHECK)
-                && OllamaProcessor.isOllamaInit) {
+                && OllamaProcessor.INSTANCE.isInitialized) {
                 OllamaProcessor.process(originalPlainText)
                     .thenAccept {
                         try {
@@ -131,7 +131,7 @@ class PaperChatListener : Listener {
                     }
             }
             if (settingsManager.getProperty(PluginSettings.ENABLE_OPENAI_AI_MODEL_CHECK)
-                && OpenAIProcessor.isOpenAiInit) {
+                && OpenAIProcessor.INSTANCE.isInitialized) {
                 OpenAIProcessor.process(originalPlainText)
                     .thenAccept {
                         val flag = it ?: return@thenAccept

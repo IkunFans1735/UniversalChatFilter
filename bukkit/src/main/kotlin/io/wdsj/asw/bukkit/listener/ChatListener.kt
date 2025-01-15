@@ -75,7 +75,7 @@ class ChatListener : Listener {
             return
         } else {
             if (settingsManager.getProperty(PluginSettings.ENABLE_OLLAMA_AI_MODEL_CHECK)
-                    && OllamaProcessor.isOllamaInit) {
+                    && OllamaProcessor.INSTANCE.isInitialized) {
                 OllamaProcessor.process(originalMessage)
                     .thenAccept {
                         try {
@@ -111,7 +111,7 @@ class ChatListener : Listener {
                     }
             }
             if (settingsManager.getProperty(PluginSettings.ENABLE_OPENAI_AI_MODEL_CHECK)
-                && OpenAIProcessor.isOpenAiInit) {
+                && OpenAIProcessor.INSTANCE.isInitialized) {
                 OpenAIProcessor.process(originalMessage)
                     .thenAccept {
                         val flag = it ?: return@thenAccept

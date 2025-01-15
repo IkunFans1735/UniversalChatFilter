@@ -22,7 +22,7 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
  */
 public enum OpenAIProcessor implements AIProcessor {
     INSTANCE;
-    public static boolean isOpenAiInit = false;
+    private static boolean isOpenAiInit = false;
     private static OpenAiClient client;
 
     /**
@@ -43,6 +43,11 @@ public enum OpenAIProcessor implements AIProcessor {
         }
         client = builder.build();
         isOpenAiInit = true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return isOpenAiInit;
     }
 
     /**

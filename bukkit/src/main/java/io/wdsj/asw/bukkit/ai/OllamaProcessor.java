@@ -17,7 +17,7 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
  */
 public enum OllamaProcessor implements AIProcessor {
     INSTANCE;
-    public static boolean isOllamaInit = false;
+    private static boolean isOllamaInit = false;
     private static PromptBuilder promptBuilder;
     private static OllamaAPI api;
     private static String modelName;
@@ -50,6 +50,11 @@ public enum OllamaProcessor implements AIProcessor {
         }
         api.setVerbose(debug);
         isOllamaInit = true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return isOllamaInit;
     }
 
     /**
