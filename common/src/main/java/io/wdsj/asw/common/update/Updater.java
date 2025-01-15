@@ -15,8 +15,10 @@ public class Updater {
     private static String latestVersion;
     private static boolean isUpdateAvailable = false;
     private static boolean isErred = false;
-    private static final String RELEASE_URL = "https://api.github.com/repos/HaHaWTH/AdvancedSensitiveWords/releases/latest";
-    private static final String COMMITS_URL = "https://api.github.com/repos/HaHaWTH/AdvancedSensitiveWords/commits/" + PluginVersionTemplate.COMMIT_BRANCH;
+    private static final String USER_NAME = "HaHaWTH";
+    private static final String REPOSITORY = "AdvancedSensitiveWords";
+    private static final String RELEASE_URL = "https://api.github.com/repos/" + USER_NAME + "/" + REPOSITORY + "/releases/latest";
+    private static final String COMMITS_URL = "https://api.github.com/repos/" + USER_NAME + "/" + REPOSITORY + "/commits/" + PluginVersionTemplate.COMMIT_BRANCH;
     @SuppressWarnings("ConstantConditions") // IDE doesn't know this will be replaced
     private static final boolean isDevChannel = PluginVersionTemplate.VERSION_CHANNEL.equalsIgnoreCase("dev");
 
