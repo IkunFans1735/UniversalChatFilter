@@ -4,18 +4,18 @@ package io.wdsj.asw.bukkit.permission;
  * Permission enums
  */
 public enum PermissionsEnum {
-    BYPASS("advancedsensitivewords.bypass"),
-    RELOAD("advancedsensitivewords.reload"),
-    ADD("advancedsensitivewords.add"),
-    REMOVE("advancedsensitivewords.remove"),
-    STATUS("advancedsensitivewords.status"),
-    TEST("advancedsensitivewords.test"),
-    HELP("advancedsensitivewords.help"),
-    NOTICE("advancedsensitivewords.notice"),
-    INFO("advancedsensitivewords.info"),
-    RESET("advancedsensitivewords.reset"),
-    UPDATE("advancedsensitivewords.update"),
-    PUNISH("advancedsensitivewords.punish");
+    BYPASS("bypass"),
+    RELOAD("reload"),
+    ADD("add"),
+    REMOVE("remove"),
+    STATUS("status"),
+    TEST("test"),
+    HELP("help"),
+    NOTICE("notice"),
+    INFO("info"),
+    RESET("reset"),
+    UPDATE("update"),
+    PUNISH("punish");
 
     private final String permission;
 
@@ -24,6 +24,8 @@ public enum PermissionsEnum {
     }
 
     public String getPermission() {
-        return permission;
+        return PREFIX + permission;
     }
+
+    private static final String PREFIX = "advancedsensitivewords.";
 }
