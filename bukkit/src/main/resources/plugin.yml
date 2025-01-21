@@ -17,6 +17,7 @@ softdepend:
   - AuthMe
   - CatSeedLogin
   - voicechat
+  - TrChat
 folia-supported: true
 commands:
   advancedsensitivewords:
