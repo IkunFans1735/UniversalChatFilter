@@ -12,7 +12,7 @@ public class WordResultConditionNumMatch extends AbstractWordResultCondition {
         final int startIndex = wordResult.startIndex();
         final int endIndex = wordResult.endIndex();
         if (startIndex > 0) {
-            char preC = text.charAt(startIndex-1);
+            char preC = text.charAt(startIndex - 1);
             if (CharUtil.isDigit(preC)) {
                 return false;
             }
