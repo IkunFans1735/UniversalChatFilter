@@ -6,6 +6,7 @@ import io.wdsj.asw.bukkit.annotation.PaperEventHandler;
 import io.wdsj.asw.bukkit.listener.*;
 import io.wdsj.asw.bukkit.listener.packet.ASWBookPacketListener;
 import io.wdsj.asw.bukkit.listener.packet.ASWChatPacketListener;
+import io.wdsj.asw.bukkit.listener.paper.PaperChatListener;
 import io.wdsj.asw.bukkit.listener.paper.PaperFakeMessageExecutor;
 import io.wdsj.asw.bukkit.listener.paper.PaperItemSpawnListener;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
@@ -145,7 +146,7 @@ public class ListenerService {
     private void registerChatBookEventListeners() {
         if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
             //noinspection ConstantConditions
-            if (true) { // TODO: Resolve PaperChatListener replace mode incompatibility with TrChat
+            if (Bukkit.getPluginManager().isPluginEnabled("TrChat") || !registerEventListener(PaperChatListener.class)) {
                 registerEventListener(ChatListener.class);
             }
             registerEventListener(CommandListener.class);
