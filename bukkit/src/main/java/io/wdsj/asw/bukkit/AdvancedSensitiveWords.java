@@ -252,7 +252,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
             voiceChatHookService.unregister();
         }
         BookCache.invalidateAll();
-        ViolationCounter.resetAllViolations();
+        ViolationCounter.INSTANCE.resetAllViolations();
         SchedulingUtils.cancelTaskSafely(violationResetTask);
         if (permCache != null) permCache.disable();
         if (isInitialized) sensitiveWordBs.destroy();

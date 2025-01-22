@@ -4,7 +4,6 @@ import io.wdsj.asw.bukkit.proxy.bungee.BungeeSender;
 import io.wdsj.asw.bukkit.proxy.velocity.VelocitySender;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
 import io.wdsj.asw.bukkit.util.SchedulingUtils;
-import io.wdsj.asw.bukkit.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -19,7 +18,6 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.LOGGER;
 import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 
 public class Punishment {
-    private static final boolean hasPotionRegistry = Utils.isClassLoaded("org.bukkit.Registry");
     public static void punish(Player player) {
         List<String> punishList = settingsManager.getProperty(PluginSettings.PUNISHMENT);
         if (punishList.isEmpty()) return;
@@ -38,7 +36,7 @@ public class Punishment {
         if (punishMethod == null) {
             throw new IllegalArgumentException("Invalid punishment method " + normalPunish[0].toUpperCase(Locale.ROOT));
         }
-        long violationCount = ViolationCounter.getViolationCount(player);
+        long violationCount = ViolationCounter.INSTANCE.getViolationCount(player);
         if (normalPunish.length > 2 && normalPunish[normalPunish.length - 1].toUpperCase(Locale.ROOT).startsWith("VL") && normalPunish[normalPunish.length - 1].length() > 2) {
             String vlCondition = normalPunish[normalPunish.length - 1].substring(2);
             if (!checkViolationCondition(vlCondition, violationCount)) {

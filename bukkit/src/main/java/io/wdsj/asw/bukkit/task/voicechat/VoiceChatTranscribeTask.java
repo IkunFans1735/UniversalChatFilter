@@ -61,7 +61,7 @@ public class VoiceChatTranscribeTask extends UniversalRunnable {
                             if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                                 LoggingUtils.logViolation(player.getName() + "(IP: " + Utils.getPlayerIp(player) + ")(Voice)", text + censoredWordList);
                             }
-                            ViolationCounter.incrementViolationCount(player);
+                            ViolationCounter.INSTANCE.incrementViolationCount(player);
                             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                 VelocitySender.sendNotifyMessage(player, ModuleType.VOICE, text, censoredWordList);
                             }

@@ -75,7 +75,7 @@ class PaperChatListener : Listener {
             if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                 LoggingUtils.logViolation(player.name + "(IP: " + Utils.getPlayerIp(player) + ")(Chat)", originalPlainText + censoredWordList)
             }
-            ViolationCounter.incrementViolationCount(player)
+            ViolationCounter.INSTANCE.incrementViolationCount(player)
             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                 VelocitySender.sendNotifyMessage(player, ModuleType.CHAT, originalPlainText, censoredWordList)
             }
@@ -107,7 +107,7 @@ class PaperChatListener : Listener {
                                 if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                                     LoggingUtils.logViolation(player.name + "(IP: " + Utils.getPlayerIp(player) + ")(Chat AI)(LLM output: $it)", originalPlainText + unsupportedList)
                                 }
-                                ViolationCounter.incrementViolationCount(player)
+                                ViolationCounter.INSTANCE.incrementViolationCount(player)
                                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                     VelocitySender.sendNotifyMessage(player, ModuleType.CHAT_AI, originalPlainText, unsupportedList)
                                 }
@@ -143,7 +143,7 @@ class PaperChatListener : Listener {
                             if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                                 LoggingUtils.logViolation(player.name + "(IP: " + Utils.getPlayerIp(player) + ")(Chat AI)(OPENAI)", originalPlainText + unsupportedList)
                             }
-                            ViolationCounter.incrementViolationCount(player)
+                            ViolationCounter.INSTANCE.incrementViolationCount(player)
                             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                 VelocitySender.sendNotifyMessage(player, ModuleType.CHAT_AI, originalPlainText, unsupportedList)
                             }
@@ -183,7 +183,7 @@ class PaperChatListener : Listener {
                 if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                     LoggingUtils.logViolation(player.name + "(IP: " + Utils.getPlayerIp(player) + ")(Chat)(Context)", originalContext + censoredContextList)
                 }
-                ViolationCounter.incrementViolationCount(player)
+                ViolationCounter.INSTANCE.incrementViolationCount(player)
                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                     VelocitySender.sendNotifyMessage(player, ModuleType.CHAT, originalContext, censoredContextList)
                 }

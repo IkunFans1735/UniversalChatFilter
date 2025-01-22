@@ -23,7 +23,7 @@ public class Notifier {
      */
     public static void notice(Player violatedPlayer, ModuleType moduleType, String originalMessage, List<String> censoredList) {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        String message = MessageUtils.retrieveMessage(PluginMessages.ADMIN_REMINDER).replace("%player%", violatedPlayer.getName()).replace("%type%", moduleType.toString()).replace("%message%", ChatColor.stripColor(originalMessage)).replace("%censored_list%", censoredList.toString()).replace("%violation%", String.valueOf(ViolationCounter.getViolationCount(violatedPlayer)));
+        String message = MessageUtils.retrieveMessage(PluginMessages.ADMIN_REMINDER).replace("%player%", violatedPlayer.getName()).replace("%type%", moduleType.toString()).replace("%message%", ChatColor.stripColor(originalMessage)).replace("%censored_list%", censoredList.toString()).replace("%violation%", String.valueOf(ViolationCounter.INSTANCE.getViolationCount(violatedPlayer)));
         for (Player player : players) {
             if (CachingPermTool.hasPermission(PermissionsEnum.NOTICE, player)) {
                 MessageUtils.sendMessage(player, message);

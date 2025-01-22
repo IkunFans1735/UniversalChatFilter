@@ -51,7 +51,7 @@ public class ASWExpansion extends PlaceholderExpansion {
             if (player != null) {
                 Player onlinePlayer = player.getPlayer();
                 if (onlinePlayer != null) {
-                    return String.valueOf(ViolationCounter.getViolationCount(onlinePlayer));
+                    return String.valueOf(ViolationCounter.INSTANCE.getViolationCount(onlinePlayer));
                 }
             }
         }

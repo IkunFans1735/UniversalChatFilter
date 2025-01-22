@@ -59,7 +59,7 @@ class PlayerItemListener : Listener {
                             originalName + censoredWordList
                         )
                     }
-                    ViolationCounter.incrementViolationCount(player)
+                    ViolationCounter.INSTANCE.incrementViolationCount(player)
                     if (settingsManager.getProperty(PluginSettings.HOOK_BUNGEECORD)) {
                         BungeeSender.sendNotifyMessage(player, ModuleType.ITEM, originalName, censoredWordList)
                     }
@@ -121,7 +121,7 @@ class PlayerItemListener : Listener {
                             originalName + censoredWordList
                         )
                     }
-                    ViolationCounter.incrementViolationCount(player)
+                    ViolationCounter.INSTANCE.incrementViolationCount(player)
                     if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                         VelocitySender.sendNotifyMessage(player, ModuleType.ITEM, originalName, censoredWordList)
                     }

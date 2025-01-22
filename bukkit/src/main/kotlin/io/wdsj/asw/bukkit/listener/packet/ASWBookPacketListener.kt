@@ -112,7 +112,7 @@ class ASWBookPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
 
             if (shouldSendMessage) {
                 Utils.messagesFilteredNum.getAndIncrement()
-                ViolationCounter.incrementViolationCount(player)
+                ViolationCounter.INSTANCE.incrementViolationCount(player)
                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                     VelocitySender.sendNotifyMessage(player, ModuleType.BOOK, outMessage, outList)
                 }

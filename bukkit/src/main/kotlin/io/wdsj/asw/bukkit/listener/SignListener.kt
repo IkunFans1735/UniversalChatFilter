@@ -114,7 +114,7 @@ class SignListener : Listener {
         }
 
         if (shouldSendMessage) {
-            ViolationCounter.incrementViolationCount(player)
+            ViolationCounter.INSTANCE.incrementViolationCount(player)
         }
 
         if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY) && shouldSendMessage) {

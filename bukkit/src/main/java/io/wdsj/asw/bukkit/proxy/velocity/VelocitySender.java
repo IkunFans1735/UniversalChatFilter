@@ -22,7 +22,7 @@ public class VelocitySender {
             out.writeUTF(ChannelDataConstant.NOTICE);
             out.writeUTF(violatedPlayer.getName());
             out.writeUTF(moduleType.toString());
-            out.writeUTF(String.valueOf(ViolationCounter.getViolationCount(violatedPlayer)));
+            out.writeUTF(String.valueOf(ViolationCounter.INSTANCE.getViolationCount(violatedPlayer)));
             out.writeUTF(originalMessage);
             out.writeUTF(censoredList.toString());
         } catch (Exception e) {

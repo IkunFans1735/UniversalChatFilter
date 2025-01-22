@@ -69,7 +69,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                 if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                     LoggingUtils.logViolation(userName + "(IP: " + user.address.address.hostAddress + ")(Chat)", originalMessage + censoredWords)
                 }
-                ViolationCounter.incrementViolationCount(player)
+                ViolationCounter.INSTANCE.incrementViolationCount(player)
                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                     VelocitySender.sendNotifyMessage(player, ModuleType.CHAT, originalMessage, censoredWords)
                 }
@@ -109,7 +109,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                                             originalMessage + unsupportedList
                                         )
                                     }
-                                    ViolationCounter.incrementViolationCount(player)
+                                    ViolationCounter.INSTANCE.incrementViolationCount(player)
                                     if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                         VelocitySender.sendNotifyMessage(
                                             player,
@@ -156,7 +156,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                                         originalMessage + unsupportedList
                                     )
                                 }
-                                ViolationCounter.incrementViolationCount(player)
+                                ViolationCounter.INSTANCE.incrementViolationCount(player)
                                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                     VelocitySender.sendNotifyMessage(
                                         player,
@@ -209,7 +209,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                     if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                         LoggingUtils.logViolation(userName + "(IP: " + Utils.getPlayerIp(player) + ")(Chat)(Context)", originalContext + censoredContextList)
                     }
-                    ViolationCounter.incrementViolationCount(player)
+                    ViolationCounter.INSTANCE.incrementViolationCount(player)
                     if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                         VelocitySender.sendNotifyMessage(player, ModuleType.CHAT, originalContext, censoredContextList)
                     }
@@ -254,7 +254,7 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                 if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                     LoggingUtils.logViolation(userName + "(IP: " + Utils.getPlayerIp(player) + ")(Chat)", "/$originalCommand$censoredWords")
                 }
-                ViolationCounter.incrementViolationCount(player)
+                ViolationCounter.INSTANCE.incrementViolationCount(player)
                 if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                     VelocitySender.sendNotifyMessage(player, ModuleType.CHAT, originalCommand, censoredWords)
                 }

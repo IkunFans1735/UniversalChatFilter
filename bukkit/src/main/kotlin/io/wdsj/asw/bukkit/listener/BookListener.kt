@@ -141,7 +141,7 @@ class BookListener : Listener {
         if (shouldSendMessage) {
             event.newBookMeta = bookMeta
             Utils.messagesFilteredNum.getAndIncrement()
-            ViolationCounter.incrementViolationCount(player)
+            ViolationCounter.INSTANCE.incrementViolationCount(player)
             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                 VelocitySender.sendNotifyMessage(player, ModuleType.BOOK, outMessage, outList)
             }

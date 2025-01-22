@@ -69,7 +69,7 @@ class AnvilListener : Listener {
                                     originalItemName + censoredWords
                                 )
                             }
-                            ViolationCounter.incrementViolationCount(player)
+                            ViolationCounter.INSTANCE.incrementViolationCount(player)
 
                             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                                 VelocitySender.sendNotifyMessage(player, ModuleType.ANVIL, originalItemName, censoredWords)

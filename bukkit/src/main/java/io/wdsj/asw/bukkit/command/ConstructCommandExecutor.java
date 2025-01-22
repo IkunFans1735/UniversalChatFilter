@@ -178,7 +178,7 @@ public class ConstructCommandExecutor implements CommandExecutor {
                         MessageUtils.sendMessage(sender, PluginMessages.PLAYER_NOT_FOUND);
                         return true;
                     }
-                    String violations = String.valueOf(ViolationCounter.getViolationCount(target));
+                    String violations = String.valueOf(ViolationCounter.INSTANCE.getViolationCount(target));
                     MessageUtils.sendMessage(sender, messagesManager.getProperty(PluginMessages.MESSAGE_ON_PLAYER_INFO).replace("%player%", playerName).replace("%violation%", violations));
                 } else {
                     MessageUtils.sendMessage(sender, PluginMessages.NOT_ENOUGH_ARGS);
@@ -197,7 +197,7 @@ public class ConstructCommandExecutor implements CommandExecutor {
                         MessageUtils.sendMessage(sender, PluginMessages.PLAYER_NOT_FOUND);
                         return true;
                     }
-                    ViolationCounter.resetViolationCount(target);
+                    ViolationCounter.INSTANCE.resetViolationCount(target);
                     MessageUtils.sendMessage(sender, messagesManager.getProperty(PluginMessages.MESSAGE_ON_COMMAND_RESET).replace("%player%", playerName));
                 } else {
                     MessageUtils.sendMessage(sender, PluginMessages.NOT_ENOUGH_ARGS);

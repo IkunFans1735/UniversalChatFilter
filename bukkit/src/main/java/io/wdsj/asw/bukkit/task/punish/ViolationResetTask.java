@@ -12,17 +12,17 @@ import org.bukkit.entity.Player;
 import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
 
 /**
- * **Asynchronous** task to reset the violation count of players.
+ * Asynchronous task to reset the violation count of players.
  */
 public class ViolationResetTask extends UniversalRunnable {
     @Override
     public void run() {
         if (settingsManager.getProperty(PluginSettings.ONLY_RESET_ONLINE_PLAYERS)) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                ViolationCounter.resetViolationCount(player);
+                ViolationCounter.INSTANCE.resetViolationCount(player);
             }
         } else {
-            ViolationCounter.resetAllViolations();
+            ViolationCounter.INSTANCE.resetAllViolations();
         }
         String message = MessageUtils.retrieveMessage(PluginMessages.MESSAGE_ON_VIOLATION_RESET);
         Notifier.normalNotice(message);

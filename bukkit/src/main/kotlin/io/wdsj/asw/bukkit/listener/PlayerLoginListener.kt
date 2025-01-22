@@ -66,7 +66,7 @@ class PlayerLoginListener : Listener {
             if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
                 LoggingUtils.logViolation(player.name + "(IP: " + playerIp + ")(Name)", playerName + censoredWordList)
             }
-            ViolationCounter.incrementViolationCount(player)
+            ViolationCounter.INSTANCE.incrementViolationCount(player)
             if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
                 VelocitySender.sendNotifyMessage(player, ModuleType.NAME, playerName, censoredWordList)
             }
