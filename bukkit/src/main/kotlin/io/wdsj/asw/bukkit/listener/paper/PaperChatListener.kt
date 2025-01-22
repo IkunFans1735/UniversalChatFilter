@@ -33,9 +33,8 @@ import org.bukkit.event.Listener
 import java.util.*
 
 @PaperEventHandler
-@Suppress("unused")
 class PaperChatListener : Listener {
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
         if (!settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) return
         val player = event.player
