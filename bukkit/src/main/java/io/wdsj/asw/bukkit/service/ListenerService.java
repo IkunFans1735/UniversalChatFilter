@@ -145,7 +145,6 @@ public class ListenerService {
 
     private void registerChatBookEventListeners() {
         if (settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) {
-            //noinspection ConstantConditions
             if (Bukkit.getPluginManager().isPluginEnabled("TrChat") || !registerEventListener(PaperChatListener.class)) {
                 registerEventListener(ChatListener.class);
             }
