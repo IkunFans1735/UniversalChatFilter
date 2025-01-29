@@ -1,6 +1,7 @@
 package io.wdsj.asw.bukkit.ai;
 
 import com.github.houbb.heaven.support.tuple.impl.Pair;
+import com.google.common.base.Preconditions;
 import dev.ai4j.openai4j.OpenAiClient;
 import dev.ai4j.openai4j.moderation.Categories;
 import dev.ai4j.openai4j.moderation.ModerationRequest;
@@ -56,9 +57,7 @@ public enum OpenAIProcessor implements AIProcessor {
      * @return A future contains the moderation response
      */
     public static CompletableFuture<Boolean> process(String inputMessage) {
-        if (!isOpenAiInit) {
-            throw new IllegalStateException("OpenAI Moderation Processor is not initialized");
-        }
+        Preconditions.checkState(isOpenAiInit, "OpenAI Moderation Processor is not initialized");
         ModerationRequest request = ModerationRequest.builder()
                 .input(inputMessage)
                 .model(TEXT_MODERATION_LATEST)

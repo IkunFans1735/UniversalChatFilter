@@ -1,5 +1,6 @@
 package io.wdsj.asw.bukkit.ai;
 
+import com.google.common.base.Preconditions;
 import io.github.amithkoujalgi.ollama4j.core.OllamaAPI;
 import io.github.amithkoujalgi.ollama4j.core.models.OllamaResult;
 import io.github.amithkoujalgi.ollama4j.core.utils.OptionsBuilder;
@@ -64,9 +65,7 @@ public enum OllamaProcessor implements AIProcessor {
      */
     @NotNull
     public static CompletableFuture<String> process(String inputMessage) {
-        if (!isOllamaInit) {
-            throw new IllegalStateException("OllamaProcessor is not initialized");
-        }
+        Preconditions.checkState(isOllamaInit, "Ollama service is not initialized");
         return CompletableFuture.supplyAsync(() -> {
             try {
                 promptBuilder = new PromptBuilder().addLine(settingsManager.getProperty(PluginSettings.AI_MODEL_PROMPT)).addSeparator()
