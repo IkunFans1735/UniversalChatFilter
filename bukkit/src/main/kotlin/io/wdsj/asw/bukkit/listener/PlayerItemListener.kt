@@ -16,11 +16,15 @@ import io.wdsj.asw.bukkit.util.LoggingUtils
 import io.wdsj.asw.bukkit.util.TimingUtils
 import io.wdsj.asw.bukkit.util.Utils
 import io.wdsj.asw.bukkit.util.message.MessageUtils
+import org.bukkit.entity.Player
+import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
+import org.bukkit.inventory.ItemStack
 
 class PlayerItemListener : Listener {
     @EventHandler(priority = EventPriority.LOW)
@@ -28,58 +32,8 @@ class PlayerItemListener : Listener {
         if (!AdvancedSensitiveWords.isInitialized || !settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) return
         val player = event.player
         if (CachingPermTool.hasPermission(PermissionsEnum.BYPASS, player)) return
-        val item = player.inventory.getItem(event.newSlot)
-        if (item != null && item.hasItemMeta()) {
-            val meta = item.itemMeta
-            if (meta != null && meta.hasDisplayName()) {
-                var originalName = meta.displayName
-                val startTime = System.currentTimeMillis()
-                if (settingsManager.getProperty(PluginSettings.PRE_PROCESS)) originalName =
-                    originalName.replace(
-                        Utils.preProcessRegex.toRegex(), ""
-                    )
-                val censoredWordList = AdvancedSensitiveWords.sensitiveWordBs.findAll(originalName)
-                if (censoredWordList.isNotEmpty()) {
-                    Utils.messagesFilteredNum.getAndIncrement()
-                    val processedName = AdvancedSensitiveWords.sensitiveWordBs.replace(originalName)
-                    if (settingsManager.getProperty(PluginSettings.ITEM_METHOD)
-                            .equals("cancel", ignoreCase = true)
-                    ) {
-                        event.isCancelled = true
-                    } else {
-                        meta.setDisplayName(processedName)
-                        item.setItemMeta(meta)
-                    }
-                    if (settingsManager.getProperty(PluginSettings.ITEM_SEND_MESSAGE)) {
-                        MessageUtils.sendMessage(player, PluginMessages.MESSAGE_ON_ITEM)
-                    }
-                    if (settingsManager.getProperty(PluginSettings.LOG_VIOLATION)) {
-                        LoggingUtils.logViolation(
-                            player.name + "(IP: " + Utils.getPlayerIp(player) + ")(Item)",
-                            originalName + censoredWordList
-                        )
-                    }
-                    ViolationCounter.INSTANCE.incrementViolationCount(player)
-                    if (settingsManager.getProperty(PluginSettings.HOOK_BUNGEECORD)) {
-                        BungeeSender.sendNotifyMessage(player, ModuleType.ITEM, originalName, censoredWordList)
-                    }
-                    if (settingsManager.getProperty(PluginSettings.HOOK_VELOCITY)) {
-                        VelocitySender.sendNotifyMessage(player, ModuleType.ITEM, originalName, censoredWordList)
-                    }
-                    val endTime = System.currentTimeMillis()
-                    TimingUtils.addProcessStatistic(endTime, startTime)
-                    if (settingsManager.getProperty(PluginSettings.NOTICE_OPERATOR)) Notifier.notice(
-                        player,
-                        ModuleType.ITEM,
-                        originalName,
-                        censoredWordList
-                    )
-                    if (settingsManager.getProperty(PluginSettings.ITEM_PUNISH)) Punishment.punish(
-                        player
-                    )
-                }
-            }
-        }
+        val item = player.inventory.getItem(event.newSlot) ?: return
+        itemCensorLogic(player, item, event)
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -88,6 +42,23 @@ class PlayerItemListener : Listener {
         val player = event.player
         if (CachingPermTool.hasPermission(PermissionsEnum.BYPASS, player)) return
         val item = event.itemDrop.itemStack
+        itemCensorLogic(player, item, event)
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    fun onClick(event: InventoryClickEvent) {
+        if (!AdvancedSensitiveWords.isInitialized || !settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) return
+        val player = event.whoClicked as? Player ?: return
+        if (CachingPermTool.hasPermission(PermissionsEnum.BYPASS, player)) return
+        val item = event.currentItem ?: return
+        itemCensorLogic(player, item, event)
+    }
+
+    private fun itemCensorLogic(
+        player: Player,
+        item: ItemStack,
+        event: Cancellable
+    ) {
         if (item.hasItemMeta()) {
             val meta = item.itemMeta
             if (meta != null && meta.hasDisplayName()) {
