@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.inventory.ItemStack
@@ -50,6 +51,7 @@ class PlayerItemListener : Listener {
         if (!AdvancedSensitiveWords.isInitialized || !settingsManager.getProperty(PluginSettings.ENABLE_PLAYER_ITEM_CHECK)) return
         val player = event.whoClicked as? Player ?: return
         if (CachingPermTool.hasPermission(PermissionsEnum.BYPASS, player)) return
+        if (event.clickedInventory?.type != InventoryType.PLAYER) return
         val item = event.currentItem ?: return
         itemCensorLogic(player, item, event)
     }
