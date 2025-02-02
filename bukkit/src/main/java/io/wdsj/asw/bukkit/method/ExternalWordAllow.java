@@ -1,7 +1,6 @@
 package io.wdsj.asw.bukkit.method;
 
 import com.github.houbb.sensitive.word.api.IWordAllow;
-import io.wdsj.asw.bukkit.AdvancedSensitiveWords;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
