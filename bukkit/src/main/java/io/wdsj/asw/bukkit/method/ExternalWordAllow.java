@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,9 +41,13 @@ public class ExternalWordAllow implements IWordAllow {
 
             files.parallelStream()
                     .forEach(file -> {
+                        final boolean isWildCard = file.getName().toLowerCase(Locale.ROOT).contains("wildcard");
                         try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
                             synchronized (totalList) {
-                                reader.lines().forEach(totalList::add);
+                                if (isWildCard) {
+                                    final WildCardLineResolver parser = new WildCardLineResolver();
+                                    reader.lines().forEach(line -> totalList.addAll(parser.resolveWildCardLine(line)));
+                                } else reader.lines().forEach(totalList::add);
                             }
                         } catch (IOException e) {
                             LOGGER.severe("Error reading file: " + file.getName());
