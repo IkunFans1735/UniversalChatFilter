@@ -2,6 +2,7 @@ package io.wdsj.asw.bukkit.method;
 
 import com.github.houbb.sensitive.word.api.IWordAllow;
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords;
+import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,8 +20,11 @@ import java.util.stream.Stream;
 import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.LOGGER;
 
 public class ExternalWordAllow implements IWordAllow {
-    private final File dataFolder = Paths.get(AdvancedSensitiveWords.getInstance().getDataFolder().getPath(),"external","allow").toFile();
+    private final File dataFolder;
 
+    public ExternalWordAllow(Plugin plugin) {
+        this.dataFolder = Paths.get(plugin.getDataFolder().getPath(),"external","allow").toFile();
+    }
     @Override
     public List<String> allow() {
         final List<String> totalList = new ArrayList<>();

@@ -3,6 +3,7 @@ package io.wdsj.asw.bukkit.method;
 import com.github.houbb.sensitive.word.api.IWordDeny;
 import io.wdsj.asw.bukkit.AdvancedSensitiveWords;
 import io.wdsj.asw.bukkit.setting.PluginSettings;
+import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,12 +23,17 @@ import static io.wdsj.asw.bukkit.AdvancedSensitiveWords.settingsManager;
  * @since Dragon
  */
 public class OnlineWordDeny implements IWordDeny {
-    private final File dataFolder = Paths.get(AdvancedSensitiveWords.getInstance().getDataFolder().getPath(), "cache").toFile();
-    private final File cacheFile = new File(dataFolder, "cache_online_deny_words.txt");
-    private final File timestampFile = new File(dataFolder, "cache_online_deny_words_timestamp.txt");
+    private final File dataFolder;
+    private final File cacheFile;
+    private final File timestampFile;
     private final String charset = settingsManager.getProperty(PluginSettings.ONLINE_WORDS_ENCODING);
     private final boolean isCacheEnabled = settingsManager.getProperty(PluginSettings.CACHE_ONLINE_WORDS);
 
+    public OnlineWordDeny(Plugin plugin) {
+        this.dataFolder = Paths.get(plugin.getDataFolder().getPath(), "cache").toFile();
+        this.cacheFile = new File(dataFolder, "cache_online_deny_words.txt");
+        this.timestampFile = new File(dataFolder, "cache_online_deny_words_timestamp.txt");
+    }
     @Override
     public List<String> deny() {
         if (isCacheEnabled && cacheFile.exists() && !isCacheExpired()) {

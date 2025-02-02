@@ -201,7 +201,7 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
     public void doInitTasks() {
         isAuthMeAvailable = Bukkit.getPluginManager().getPlugin("AuthMe") != null;
         isCslAvailable = Bukkit.getPluginManager().getPlugin("CatSeedLogin") != null;
-        IWordAllow wA = WordAllows.chains(WordAllows.defaults(), new WordAllow(), new ExternalWordAllow());
+        IWordAllow wA = WordAllows.chains(WordAllows.defaults(), new WordAllow(), new ExternalWordAllow(this));
         AtomicReference<IWordDeny> wD = new AtomicReference<>();
         isInitialized = false;
         sensitiveWordBs = null;
@@ -225,13 +225,13 @@ public final class AdvancedSensitiveWords extends JavaPlugin {
         }
         getScheduler().runTaskAsynchronously(() -> {
             if (settingsManager.getProperty(PluginSettings.ENABLE_DEFAULT_WORDS) && settingsManager.getProperty(PluginSettings.ENABLE_ONLINE_WORDS)) {
-                wD.set(WordDenys.chains(WordDenys.defaults(), new WordDeny(), new OnlineWordDeny(), new ExternalWordDeny()));
+                wD.set(WordDenys.chains(WordDenys.defaults(), new WordDeny(), new OnlineWordDeny(this), new ExternalWordDeny(this)));
             } else if (settingsManager.getProperty(PluginSettings.ENABLE_DEFAULT_WORDS)) {
-                wD.set(WordDenys.chains(new WordDeny(), WordDenys.defaults(), new ExternalWordDeny()));
+                wD.set(WordDenys.chains(new WordDeny(), WordDenys.defaults(), new ExternalWordDeny(this)));
             } else if (settingsManager.getProperty(PluginSettings.ENABLE_ONLINE_WORDS)) {
-                wD.set(WordDenys.chains(new OnlineWordDeny(), new WordDeny(), new ExternalWordDeny()));
+                wD.set(WordDenys.chains(new OnlineWordDeny(this), new WordDeny(), new ExternalWordDeny(this)));
             } else {
-                wD.set(WordDenys.chains(new WordDeny(), new ExternalWordDeny()));
+                wD.set(WordDenys.chains(new WordDeny(), new ExternalWordDeny(this)));
             }
             sensitiveWordBs = SensitiveWordBs.newInstance().ignoreCase(settingsManager.getProperty(PluginSettings.IGNORE_CASE)).ignoreWidth(settingsManager.getProperty(PluginSettings.IGNORE_WIDTH)).ignoreNumStyle(settingsManager.getProperty(PluginSettings.IGNORE_NUM_STYLE)).ignoreChineseStyle(settingsManager.getProperty(PluginSettings.IGNORE_CHINESE_STYLE)).ignoreEnglishStyle(settingsManager.getProperty(PluginSettings.IGNORE_ENGLISH_STYLE)).ignoreRepeat(settingsManager.getProperty(PluginSettings.IGNORE_REPEAT)).enableNumCheck(settingsManager.getProperty(PluginSettings.ENABLE_NUM_CHECK)).enableEmailCheck(settingsManager.getProperty(PluginSettings.ENABLE_EMAIL_CHECK)).enableUrlCheck(settingsManager.getProperty(PluginSettings.ENABLE_URL_CHECK)).enableWordCheck(settingsManager.getProperty(PluginSettings.ENABLE_WORD_CHECK)).wordResultCondition(condition).wordDeny(wD.get()).wordAllow(wA).numCheckLen(settingsManager.getProperty(PluginSettings.NUM_CHECK_LEN)).wordReplace(new WordReplace()).wordTag(WordTags.none()).charIgnore(new CharIgnore()).enableIpv4Check(settingsManager.getProperty(PluginSettings.ENABLE_IP_CHECK)).init();
             isInitialized = true;
