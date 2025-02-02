@@ -31,6 +31,7 @@ import org.bukkit.entity.Player
 import java.util.*
 
 class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW) {
+    private val length = 256
     override fun onPacketReceive(event: PacketReceiveEvent) {
         if (!settingsManager.getProperty(PluginSettings.ENABLE_CHAT_CHECK)) return
         val packetType = event.packetType
@@ -55,9 +56,8 @@ class ASWChatPacketListener : PacketListenerAbstract(PacketListenerPriority.LOW)
                         event.isCancelled = true
                     }
                 } else {
-                    val maxLength = 256
-                    if (processedMessage.length > maxLength) {
-                        wrapperPlayClientChatMessage.message = processedMessage.substring(0, maxLength)
+                    if (processedMessage.length > length) {
+                        wrapperPlayClientChatMessage.message = processedMessage.substring(0, length)
                     } else {
                         wrapperPlayClientChatMessage.message = processedMessage
                     }
